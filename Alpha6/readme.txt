@@ -1,1 +1,0 @@
-one_shot_train is used to train both pruning amount equals 0.9 and 0.8 models.
