@@ -68,7 +68,7 @@ module corelet(clk, reset, inst, data_to_l0, l0_rd, l0_wr, l0_full, l0_ready, of
     );
 
     genvar i;
-
+    generate
     for (i=1; i<col+1; i=i+1) begin : sfu_num
         sfu #(.bw(bw), .psum_bw(psum_bw)) sfu_instance (
             .clk(clk),
@@ -79,5 +79,6 @@ module corelet(clk, reset, inst, data_to_l0, l0_rd, l0_wr, l0_full, l0_ready, of
             .out(data_out[psum_bw*i-1 : psum_bw*(i-1)])
         );
     end
+    endgenerate
 
 endmodule
