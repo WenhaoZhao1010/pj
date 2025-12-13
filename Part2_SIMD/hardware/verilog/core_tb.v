@@ -122,7 +122,7 @@ initial begin
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
-  // x_scan_file = $fscanf(x_file,"%s", captured_data);
+  x_scan_file = $fscanf(x_file,"%s", captured_data);
 
   //////// Reset /////////
   #0.5 clk = 1'b0;   reset = 1;
@@ -161,7 +161,7 @@ initial begin
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
   w_scan_file = $fscanf(w_file,"%s", captured_data);
-  // w_scan_file = $fscanf(w_file,"%s", captured_data);
+  w_scan_file = $fscanf(w_file,"%s", captured_data);
 
 //------------------------------------------------------------
 
@@ -357,7 +357,7 @@ initial begin
   // Following three lines are to remove the first three comment lines of the file
   out_scan_file = $fscanf(out_file,"%s", answer); 
   out_scan_file = $fscanf(out_file,"%s", answer); 
-  // out_scan_file = $fscanf(out_file,"%s", answer); 
+  out_scan_file = $fscanf(out_file,"%s", answer); 
 
   error = 0;
 
@@ -442,7 +442,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
-  // x_scan_file = $fscanf(x_file,"%s", captured_data);
+  x_scan_file = $fscanf(x_file,"%s", captured_data);
 
   //////// Reset /////////
   #0.5 clk = 1'b0;   reset = 1; ctrl = 1; A_xmem = 0; A_pmem = 0;
@@ -481,7 +481,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
   w_scan_file = $fscanf(w_file,"%s", captured_data);
-  // w_scan_file = $fscanf(w_file,"%s", captured_data);
+  w_scan_file = $fscanf(w_file,"%s", captured_data);
 
 //------------------------------------------------------------
 
@@ -677,7 +677,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
   // Following three lines are to remove the first three comment lines of the file
   out_scan_file = $fscanf(out_file,"%s", answer); 
   out_scan_file = $fscanf(out_file,"%s", answer); 
-  // out_scan_file = $fscanf(out_file,"%s", answer); 
+  out_scan_file = $fscanf(out_file,"%s", answer); 
 
   error = 0;
 
@@ -725,7 +725,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
     #0.5 clk = 1'b0; acc = 0;
     #0.5 clk = 1'b1; 
 
-    #0.5 clk = 1'b0; relu = 0;
+    #0.5 clk = 1'b0; relu = 1;
     #0.5 clk = 1'b1; 
     #0.5 clk = 1'b0; relu = 0;
     #0.5 clk = 1'b1; 
