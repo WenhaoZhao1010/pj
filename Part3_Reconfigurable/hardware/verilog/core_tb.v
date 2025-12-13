@@ -155,7 +155,7 @@ begin
     error    = 0;
 
     // ---------------- Activation -> XMEM[0..35] ----------------
-    x_file = $fopen("activation.txt", "r");
+    x_file = $fopen("../datafile/activation.txt", "r");
     x_scan_file = $fscanf(x_file,"%s", captured_data);
     x_scan_file = $fscanf(x_file,"%s", captured_data);
     x_scan_file = $fscanf(x_file,"%s", captured_data);
@@ -178,7 +178,7 @@ begin
     $fclose(x_file);
 
     // ---------------- weight.txt ----------------
-    w_file = $fopen("weight.txt", "r");
+    w_file = $fopen("../datafile/weight.txt", "r");
     w_scan_file = $fscanf(w_file,"%s", captured_data);
     w_scan_file = $fscanf(w_file,"%s", captured_data);
     w_scan_file = $fscanf(w_file,"%s", captured_data);
@@ -280,8 +280,8 @@ begin
 
     $fclose(w_file);
 
-    acc_file = $fopen("address.txt", "r");
-    out_file = $fopen("output.txt", "r");  
+    acc_file = $fopen("../datafile/address.txt", "r");
+    out_file = $fopen("../datafile/output.txt", "r");  
 
     out_scan_file = $fscanf(out_file,"%s", answer); 
     out_scan_file = $fscanf(out_file,"%s", answer); 
@@ -375,7 +375,7 @@ begin
     end
 
     // ------------ activation_os -> XMEM[0..71] ------------
-    x_file = $fopen("activation_os.txt", "r");
+    x_file = $fopen("../datafile/activation_os.txt", "r");
 
     #0.5 clk = 1'b0; reset = 1; #0.5 clk = 1'b1;
     repeat(10) begin #0.5 clk = 1'b0; #0.5 clk = 1'b1; end
@@ -396,7 +396,7 @@ begin
     $fclose(x_file);
 
     // ------------ weight_os -> XMEM[BASE_W..BASE_W+71] ------------
-    w_file = $fopen("weight_os.txt", "r");
+    w_file = $fopen("../datafile/weight_os.txt", "r");
 
     A_xmem = BASE_W;
     for (t=0; t<len_nij_os; t=t+1) begin  
@@ -483,7 +483,7 @@ begin
     #0.5 clk = 1'b1;
 
 
-    out_file = $fopen("output_os.txt", "r");
+    out_file = $fopen("../datafile/output_os.txt", "r");
 
     $display("[OS] ############ Verification Start #############");
     error = 0;
@@ -523,13 +523,13 @@ initial begin
     $dumpfile("core_tb.vcd");
     $dumpvars(0,core_tb);
 
-    run_ws();
+    run_ws;
 
     #0.5 clk = 1'b0; reset = 1; #0.5 clk = 1'b1;
     #0.5 clk = 1'b0;           #0.5 clk = 1'b1;
     #0.5 clk = 1'b0; reset = 0; #0.5 clk = 1'b1;
 
-    run_os(); 
+    run_os; 
 
     #10 $finish;
 end
