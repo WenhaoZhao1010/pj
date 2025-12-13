@@ -2,8 +2,8 @@
 # About Part 2 SIMD
 
 ## (!!!MUST READ!!!)Important NOTES before you start to test
-1. For 2 bit version, your instructor-provided weight files may FAIL because of tiling issues and different data form of activations and weights. If you fail, it doesn't mean our design is wrong.
-2. For 4 bit version, your instructor-provided weight files still may FAIL because of different data form(we use 8 bit L0) of activations and weights. If you fail, it doesn't mean our design is wrong.
+1. For 2 bit version, your instructor-provided weight files may **FAIL** because of tiling issues and different data form of activations and weights. If you fail, it doesn't mean our design is wrong.
+2. For 4 bit version, your instructor-provided weight files still may **FAIL** because of different data form(we use 8 bit L0) of activations and weights. If you fail, it doesn't mean our design is wrong.
 3. You can add your model to the `./result` directory under the `./software` directory, and then run `VGG16_Quantization_Aware_Training_2bit4bit.ipynb` and `VGG16_Quantization_Aware_Training_4bit4bit.ipynb` to generate test data in our format. If you did this and our design still fails, please contact us.
 
 ## Test Procedure

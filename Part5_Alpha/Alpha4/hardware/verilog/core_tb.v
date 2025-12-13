@@ -44,15 +44,10 @@ reg acc = 0;
 reg relu = 0;
 reg relu_q = 0;
 reg ctrl_q = 0;
-reg huffman_data_in_q = 0;
-reg huffman_en_q = 0;
-
 
 reg [1:0]  inst_w; 
 reg [bw*row-1:0] D_xmem;
 reg [psum_bw*col-1:0] answer;
-reg huffman_data_in;
-reg huffman_en;
 
 
 reg ofifo_rd;
@@ -73,7 +68,6 @@ integer w_file, w_scan_file ; // file_handler
 integer acc_file, acc_scan_file ; // file_handler
 integer out_file, out_scan_file ; // file_handler
 integer runans_file, runans_hex_file ; // file_handler
-integer x_huffman_file, x_huffman_scan_file ; // file_handler
 integer captured_data; 
 integer t, i, j, k, kij, och_t;
 integer error;
@@ -87,7 +81,7 @@ assign inst_q[19]   = CEN_xmem_q;    // XMEM chip enable (0 = enabled, 1 = disab
 assign inst_q[18]   = WEN_xmem_q;    // XMEM write enable (0 = write, 1 = read)
 assign inst_q[17:7] = A_xmem_q;      // XMEM address (11 bits for 2048 memory locations)
 assign inst_q[6]    = ofifo_rd_q;    // Output FIFO read enable
-assign inst_q[5]    = huffman_en_q;    // Huffman decoding enable
+assign inst_q[5]    = ififo_wr_q;    // Input FIFO write enable // useless now
 assign inst_q[4]    = ctrl_q;        // Control bit for activation bitwidth (0 = 2bit, 1 = 4bit)
 assign inst_q[3]    = l0_rd_q;       // L0 buffer read enable
 assign inst_q[2]    = l0_wr_q;       // L0 buffer write enable
@@ -99,12 +93,9 @@ core  #(.bw(bw), .col(col), .row(row)) core_instance (
 	.clk(clk), 
 	.inst(inst_q),
 	.ofifo_valid(ofifo_valid),
-  .huffman_data_in(huffman_data_in_q),
         .d_xmem(D_xmem_q), 
         .sfp_out(sfp_out), 
 	.reset(reset)); 
-
-
 
 
 initial begin 
@@ -122,14 +113,12 @@ initial begin
   execute  = 0;
   load     = 0;
   ctrl     = 0;
-  huffman_data_in = 0;
-  huffman_en = 0;
 
   $dumpfile("core_tb.vcd");
   $dumpvars(0,core_tb);
   $display("########### Now begin 2b4b testbench ############"); 
 
-  x_file = $fopen("activation2b4b.txt", "r");
+  x_file = $fopen("../datafiles/activation2b4b.txt", "r");
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
@@ -167,7 +156,7 @@ initial begin
   $fclose(x_file);
   /////////////////////////////////////////////////
 
-  w_file_name = "weight2b4b.txt";
+  w_file_name = "../datafiles/weight2b4b.txt";
   w_file = $fopen(w_file_name, "r");
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
@@ -360,8 +349,8 @@ initial begin
 /////////////////////////////////////////////////////////////////////////
 
   ////////// Accumulation /////////
-  acc_file = $fopen("address2b4b.txt", "r");
-  out_file = $fopen("output2b4b.txt", "r");  
+  acc_file = $fopen("../datafiles/address2b4b.txt", "r");
+  out_file = $fopen("../datafiles/output2b4b.txt", "r");  
   runans_file = $fopen("runans.txt", "w");
   runans_hex_file = $fopen("runans_hex.txt", "w");
 
@@ -449,12 +438,11 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
 //------------------------------------------------------------
   $display("########### Now begin 4b4b testbench ############"); 
 
-  x_file = $fopen("activation4b4b.txt", "r");
+  x_file = $fopen("../datafiles/activation4b4b.txt", "r");
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   // x_scan_file = $fscanf(x_file,"%s", captured_data);
-  x_huffman_file = $fopen("activation4b4b_huffman.txt", "r");
 
   //////// Reset /////////
   #0.5 clk = 1'b0;   reset = 1; ctrl = 1; A_xmem = 0; A_pmem = 0;
@@ -473,38 +461,22 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
   /////////////////////////
 
   /////// Activation data writing to memory ///////
-
-  // $display("########### Now we disable huffman decoding ############"); 
-  // for (t=0; t<len_nij; t=t+1) begin  
-  //   #0.5 clk = 1'b0;  
-  //   x_scan_file = $fscanf(x_file,"%64b", D_xmem); 
-  //   WEN_xmem = 0; 
-  //   CEN_xmem = 0; 
-  //   if (t>0) A_xmem = A_xmem + 1;
-  //   #0.5 clk = 1'b1;   
-  // end
-
-  $display("########### Now we enable huffman decoding ############"); 
-  while (!$feof(x_huffman_file)) begin
+  for (t=0; t<len_nij; t=t+1) begin  
     #0.5 clk = 1'b0;  
-    huffman_en = 1;
-    x_huffman_scan_file = $fscanf(x_huffman_file,"%1b", huffman_data_in); 
+    x_scan_file = $fscanf(x_file,"%64b", D_xmem); 
+    WEN_xmem = 0; 
+    CEN_xmem = 0; 
+    if (t>0) A_xmem = A_xmem + 1;
     #0.5 clk = 1'b1;   
   end
-    for (i=0; i<500 ; i=i+1) begin
-    #0.5 clk = 1'b0;
-    #0.5 clk = 1'b1;  
-  end
-  huffman_en = 0;
 
   #0.5 clk = 1'b0;  WEN_xmem = 1;  CEN_xmem = 1; A_xmem = 0;
   #0.5 clk = 1'b1; 
 
   $fclose(x_file);
-  $fclose(x_huffman_file);
   /////////////////////////////////////////////////
 
-  w_file_name = "weight4b4b.txt";
+  w_file_name = "../datafiles/weight4b4b.txt";
   w_file = $fopen(w_file_name, "r");
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
@@ -697,8 +669,8 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
 /////////////////////////////////////////////////////////////////////////
 
   ////////// Accumulation /////////
-  acc_file = $fopen("address4b4b.txt", "r");
-  out_file = $fopen("output4b4b.txt", "r");  
+  acc_file = $fopen("../datafiles/address4b4b.txt", "r");
+  out_file = $fopen("../datafiles/output4b4b.txt", "r");  
   runans_file = $fopen("runans4b4b.txt", "w");
   runans_hex_file = $fopen("runans4b4b_hex.txt", "w");
 
@@ -801,8 +773,6 @@ always @ (posedge clk) begin
    load_q     <= load;
    relu_q     <= relu;
    ctrl_q     <= ctrl;
-   huffman_data_in_q <= huffman_data_in;
-   huffman_en_q <= huffman_en;
 end
 
 

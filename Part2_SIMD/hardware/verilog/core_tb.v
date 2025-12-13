@@ -118,7 +118,7 @@ initial begin
   $dumpvars(0,core_tb);
   $display("########### Now begin 2b4b testbench ############"); 
 
-  x_file = $fopen("../datafile/activation2b4b.txt", "r");
+  x_file = $fopen("../datafiles/activation2b4b.txt", "r");
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
@@ -156,7 +156,7 @@ initial begin
   $fclose(x_file);
   /////////////////////////////////////////////////
 
-  w_file_name = "../datafile/weight2b4b.txt";
+  w_file_name = "../datafiles/weight2b4b.txt";
   w_file = $fopen(w_file_name, "r");
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
@@ -349,8 +349,8 @@ initial begin
 /////////////////////////////////////////////////////////////////////////
 
   ////////// Accumulation /////////
-  acc_file = $fopen("../datafile/address2b4b.txt", "r");
-  out_file = $fopen("../datafile/output2b4b.txt", "r");  
+  acc_file = $fopen("../datafiles/address2b4b.txt", "r");
+  out_file = $fopen("../datafiles/output2b4b.txt", "r");  
   runans_file = $fopen("runans.txt", "w");
   runans_hex_file = $fopen("runans_hex.txt", "w");
 
@@ -438,7 +438,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
 //------------------------------------------------------------
   $display("########### Now begin 4b4b testbench ############"); 
 
-  x_file = $fopen("../datafile/activation4b4b.txt", "r");
+  x_file = $fopen("../datafiles/activation4b4b.txt", "r");
   // Following three lines are to remove the first three comment lines of the file
   x_scan_file = $fscanf(x_file,"%s", captured_data);
   x_scan_file = $fscanf(x_file,"%s", captured_data);
@@ -476,7 +476,7 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
   $fclose(x_file);
   /////////////////////////////////////////////////
 
-  w_file_name = "../datafile/weight4b4b.txt";
+  w_file_name = "../datafiles/weight4b4b.txt";
   w_file = $fopen(w_file_name, "r");
   // Following three lines are to remove the first three comment lines of the file
   w_scan_file = $fscanf(w_file,"%s", captured_data);
@@ -669,8 +669,8 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
 /////////////////////////////////////////////////////////////////////////
 
   ////////// Accumulation /////////
-  acc_file = $fopen("../datafile/address4b4b.txt", "r");
-  out_file = $fopen("../datafile/output4b4b.txt", "r");  
+  acc_file = $fopen("../datafiles/address4b4b.txt", "r");
+  out_file = $fopen("../datafiles/output4b4b.txt", "r");  
   runans_file = $fopen("runans4b4b.txt", "w");
   runans_hex_file = $fopen("runans4b4b_hex.txt", "w");
 
