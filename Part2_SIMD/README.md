@@ -1,13 +1,18 @@
 
 # About Part 2 SIMD
 
+## (!!!MUST READ!!!)Important NOTES before you start to test
+1. For 2 bit version, your instructor-provided weight files may FAIL because of tiling issues and different data form of activations and weights. If you fail, it doesn't mean our design is wrong.
+2. For 4 bit version, your instructor-provided weight files still may FAIL because of different data form(we use 8 bit L0) of activations and weights. If you fail, it doesn't mean our design is wrong.
+3. You can add your model to the `./result` directory under the `./software` directory, and then run `VGG16_Quantization_Aware_Training_2bit4bit.ipynb` and `VGG16_Quantization_Aware_Training_4bit4bit.ipynb` to generate test data in our format. If you did this and our design still fails, please contact us.
+
 ## Test Procedure
-1. Run `project_2b4b.ipynb` and `project_4b4b.ipynb` to generate test data (you may choose whether to retrain; trained models are saved in `./result/VGG16_quant2b4b` and `./result/VGG16_quant4b4b`).
+1. (YOU CAN NOT DO THIS PART DUE TO LACK OF MODEL) Run `VGG16_Quantization_Aware_Training_2bit4bit.ipynb` and `VGG16_Quantization_Aware_Training_4bit4bit.ipynb` to generate test data (you may choose whether to retrain; trained models are saved in `./result/VGG16_quant2b4b` and `./result/VGG16_quant4b4b`).
 2. Verify that the following six files have been generated:  
    `activation2b4b.txt`, `weight2b4b.txt`, `output2b4b.txt`,  
    `activation4b4b.txt`, `weight4b4b.txt`, `output4b4b.txt`.
 3. Run `address_gen.ipynb` to generate `address2b4b.txt` and `address4b4b.txt` (you need to manually modify the output filenames and the output tile size).
-4. Execute `source ./cmd.sh` in the terminal to run tests for both 2b4b and 4b4b with output tiling enabled. Please ignore any warnings printed in the terminal.
+4. `cd ./hardware/sim`. Execute `source ./cmd.sh` in the terminal to run tests for both 2b4b and 4b4b with output tiling enabled. Please ignore any warnings printed in the terminal.
 
 ## Test Results
 ![alt text](<tiling without huffman.png>)
@@ -17,7 +22,7 @@ The tests pass successfully. Detailed waveforms can be found in `core_tb.vcd`.
 ## 2b4b Introduction
 
 ### Model Training
-The 2b4b quantized model was trained in `project_2b4b.ipynb`, achieving an accuracy of **89.51%**.
+The 2b4b quantized model was trained in `VGG16_Quantization_Aware_Training_2bit4bit.ipynb`, achieving an accuracy of **89.51%**.
 
 ### mac_tile
 Compared to the vanilla implementation, the 2b4b version expands the original 4-bit `x` and `w` ports into eight ports with different bit widths (`a_bw=2`, `w_bw=4`). The port definitions are as follows:
@@ -83,7 +88,7 @@ end
 To deliver two different 4-bit weights to `mac_tile` in the same cycle, the bit width (`bw`) of L0 and `xmem` was changed to 8 bits. In `core_let`, a `genvar` loop splits the 8-bit input into 4-bit segments.  
 For activations formed by concatenating two 2-bit values into 4 bits, zero-padding is used to align them to the 4-bit input format.
 
-In `project_2b4b.ipynb` (which generates `activation2b4b.txt`, `weight2b4b.txt`, etc.):
+In `VGG16_Quantization_Aware_Training_2bit4bit.ipynb` (which generates `activation2b4b.txt`, `weight2b4b.txt`, etc.):
 
 ```python
 for i in range(X.size(1)):
@@ -109,7 +114,7 @@ For the 2b4b test, since the output channel count (`och`) is 16—but our SIMD-e
 ## 4b4b Introduction
 
 ### Model Training
-The 4b4b quantized model was trained in `project_4b4b.ipynb`, achieving an accuracy of **91.36%**.
+The 4b4b quantized model was trained in `VGG16_Quantization_Aware_Training_4bit4bit.ipynb`, achieving an accuracy of **91.36%**.
 
 ### mac_tile
 For the 4b4b case where weights are identical, both `b_q_0` and `b_q_1` registers are driven from `x_in_0` to ensure they remain the same.
@@ -118,7 +123,7 @@ For the 4b4b case where weights are identical, both `b_q_0` and `b_q_1` register
 Although `b_q_0` and `b_q_1` originate from the same port, both `reorg_w_0` and `reorg_w_1` are connected only to the upper 4 bits of L0’s output: `data_out_l0[l0_bw*i + 3 : l0_bw*i]`.
 
 ### core_tb
-In `project_4b4b.ipynb` (which generates `activation4b4b.txt`, `weight4b4b.txt`, etc.), all data bit widths are aligned to 8 bits to match the width of `xmem` and L0.
+In `VGG16_Quantization_Aware_Training_4bit4bit.ipynb` (which generates `activation4b4b.txt`, `weight4b4b.txt`, etc.), all data bit widths are aligned to 8 bits to match the width of `xmem` and L0.
 
 ---
 

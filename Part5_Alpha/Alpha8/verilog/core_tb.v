@@ -474,28 +474,28 @@ for (och_t = 0; och_t < och_tile; och_t = och_t + 1) begin
 
   /////// Activation data writing to memory ///////
 
-  $display("########### Now we disable huffman decoding ############"); 
-  for (t=0; t<len_nij; t=t+1) begin  
-    #0.5 clk = 1'b0;  
-    x_scan_file = $fscanf(x_file,"%64b", D_xmem); 
-    WEN_xmem = 0; 
-    CEN_xmem = 0; 
-    if (t>0) A_xmem = A_xmem + 1;
-    #0.5 clk = 1'b1;   
-  end
-
-  // $display("########### Now we enable huffman decoding ############"); 
-  // while (!$feof(x_huffman_file)) begin
+  // $display("########### Now we disable huffman decoding ############"); 
+  // for (t=0; t<len_nij; t=t+1) begin  
   //   #0.5 clk = 1'b0;  
-  //   huffman_en = 1;
-  //   x_huffman_scan_file = $fscanf(x_huffman_file,"%1b", huffman_data_in); 
+  //   x_scan_file = $fscanf(x_file,"%64b", D_xmem); 
+  //   WEN_xmem = 0; 
+  //   CEN_xmem = 0; 
+  //   if (t>0) A_xmem = A_xmem + 1;
   //   #0.5 clk = 1'b1;   
   // end
-  //   for (i=0; i<500 ; i=i+1) begin
-  //   #0.5 clk = 1'b0;
-  //   #0.5 clk = 1'b1;  
-  // end
-  // huffman_en = 0;
+
+  $display("########### Now we enable huffman decoding ############"); 
+  while (!$feof(x_huffman_file)) begin
+    #0.5 clk = 1'b0;  
+    huffman_en = 1;
+    x_huffman_scan_file = $fscanf(x_huffman_file,"%1b", huffman_data_in); 
+    #0.5 clk = 1'b1;   
+  end
+    for (i=0; i<500 ; i=i+1) begin
+    #0.5 clk = 1'b0;
+    #0.5 clk = 1'b1;  
+  end
+  huffman_en = 0;
 
   #0.5 clk = 1'b0;  WEN_xmem = 1;  CEN_xmem = 1; A_xmem = 0;
   #0.5 clk = 1'b1; 
