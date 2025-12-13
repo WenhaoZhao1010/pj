@@ -523,13 +523,13 @@ initial begin
     $dumpfile("core_tb.vcd");
     $dumpvars(0,core_tb);
 
-    run_ws();
+    run_ws;
 
     #0.5 clk = 1'b0; reset = 1; #0.5 clk = 1'b1;
     #0.5 clk = 1'b0;           #0.5 clk = 1'b1;
     #0.5 clk = 1'b0; reset = 0; #0.5 clk = 1'b1;
 
-    run_os(); 
+    run_os; 
 
     #10 $finish;
 end
